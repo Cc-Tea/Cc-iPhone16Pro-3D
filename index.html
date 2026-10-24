@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07080a">
+  <meta name="description" content="iPhone 16 Pro 精密结构实验室：使用 Three.js 实时生成的可交互 3D 拆解可视化，探索钛金属中框、A18 Pro、相机系统、电池与更多部件。">
+  <title>iPhone 16 Pro · 精密结构实验室</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2308090b'/%3E%3Cpath d='M32 11l16 9.2v18.5L32 47.8 16 38.7V20.2z' fill='none' stroke='%23c8b196' stroke-width='2.4'/%3E%3Cpath d='M16 20.2l16 9.3 16-9.3M32 29.5v18.3' fill='none' stroke='%238de9ff' stroke-width='2.4'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <svg class="svg-defs" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-sigil" viewBox="0 0 34 34">
+      <path d="M17 3.8 29.1 10.7v13.9L17 31.5 4.9 24.6V10.7z"/>
+      <path d="M4.9 10.7 17 17.6l12.1-6.9M17 17.6v13.9"/>
+    </symbol>
+    <symbol id="i-screen" viewBox="0 0 24 24">
+      <rect x="5.8" y="2.3" width="12.4" height="19.4" rx="3.2"/>
+      <path d="M10 4.6h4M10.9 18.7h2.2"/>
+    </symbol>
+    <symbol id="i-frame" viewBox="0 0 24 24">
+      <rect x="5.2" y="2.2" width="13.6" height="19.6" rx="3.5"/>
+      <rect x="7" y="4.1" width="10" height="15.8" rx="2.1"/>
+      <path d="M3.2 7.2v2M3.2 11.3v2.9M20.8 8.8v3.3"/>
+    </symbol>
+    <symbol id="i-back" viewBox="0 0 24 24">
+      <rect x="5" y="2.2" width="14" height="19.6" rx="3.5"/>
+      <rect x="7" y="4.2" width="5.6" height="5.6" rx="1.5"/>
+      <circle cx="8.8" cy="5.9" r="1.05"/><circle cx="8.8" cy="8.4" r="1.05"/><circle cx="11.2" cy="7.1" r="1.05"/>
+      <path d="M12.2 13.7c-1.6-1.4-3.9.8-2.3 2.4 1.6 1.6 4.6-.2 4.2-2.2-.2-1-.9-1.7-1.9-2"/>
+    </symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24">
+      <rect x="3.4" y="3.4" width="17.2" height="17.2" rx="5"/>
+      <circle cx="9" cy="8.3" r="2.65"/><circle cx="9" cy="15.7" r="2.65"/><circle cx="15.8" cy="12" r="2.65"/>
+      <circle cx="15.6" cy="6.5" r=".8"/><path d="M6.5 17.4h1.2"/>
+    </symbol>
+    <symbol id="i-logic" viewBox="0 0 24 24">
+      <rect x="3.2" y="4.2" width="17.6" height="15.6" rx="2.2"/>
+      <rect x="8.3" y="8.7" width="7.4" height="6.6" rx="1"/>
+      <path d="M10.5 10.8h3M10.5 13.2h2M3.2 8h2.3M3.2 12h2.3M3.2 16h2.3M18.5 8h2.3M18.5 12h2.3M18.5 16h2.3M8 4.2v2M12 4.2v2M16 4.2v2M8 17.7v2.1M12 17.7v2.1M16 17.7v2.1"/>
+    </symbol>
+    <symbol id="i-battery" viewBox="0 0 24 24">
+      <rect x="2.5" y="7" width="17.4" height="10" rx="2.4"/>
+      <path d="M22 10.3v3.4M5.4 9.8h5.8v4.4H5.4zM13.7 9.5l-2 3h2.7l-2 3"/>
+    </symbol>
+    <symbol id="i-taptic" viewBox="0 0 24 24">
+      <rect x="3.2" y="6.2" width="17.6" height="11.6" rx="3"/>
+      <path d="M6.2 10v4M9 8.6v6.8M12 10.4v3.2M15 8.9v6.2M17.8 10.2v3.6"/>
+    </symbol>
+    <symbol id="i-speaker" viewBox="0 0 24 24">
+      <rect x="3" y="5" width="18" height="14" rx="3"/>
+      <path d="M7 9h.01M10 9h.01M13 9h.01M16 9h.01M7 12h.01M10 12h.01M13 12h.01M16 12h.01M7 15h.01M10 15h.01M13 15h.01M16 15h.01" stroke-width="2.2"/>
+    </symbol>
+    <symbol id="i-usb" viewBox="0 0 24 24">
+      <rect x="2.8" y="8" width="18.4" height="8" rx="4"/>
+      <path d="M7.2 11.1v1.8M11.2 10.8v2.4M15.2 11.1v1.8M19 11.1v1.8"/>
+    </symbol>
+    <symbol id="i-magsafe" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"/>
+      <circle cx="12" cy="12" r="5.5" stroke-dasharray="1.6 2.2"/>
+      <circle cx="12" cy="12" r="2" stroke-dasharray=".6 2"/>
+      <path d="M12 3v2.2M21 12h-2.2M12 21v-2.2M3 12h2.2"/>
+    </symbol>
+    <symbol id="i-buttons" viewBox="0 0 24 24">
+      <rect x="6.2" y="2.4" width="11.6" height="19.2" rx="3.2"/>
+      <path d="M4 6.7h1.2v2.1H4zM4 10.8h1.2v3.1H4zM18.8 8.2H20v3.6h-1.2zM18.8 13.2H20v2.5h-1.2z"/>
+    </symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24">
+      <path d="m12 3.4 8.6 4.5L12 12.4 3.4 7.9zM4 12l8 4.2 8-4.2M4 16.1l8 4.2 8-4.2"/>
+    </symbol>
+    <symbol id="i-rotate" viewBox="0 0 24 24">
+      <path d="M20.3 9.2A8.6 8.6 0 1 0 20 15"/>
+      <path d="M20.8 3.8v5.7h-5.7"/>
+      <circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24">
+      <path d="M4.8 9.3A8 8 0 1 1 4.5 14M3.8 3.8v5.9h5.9"/>
+      <path d="M9.2 9.2h5.6v5.6H9.2z"/>
+    </symbol>
+    <symbol id="i-help" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9.2"/>
+      <path d="M9.6 9.1a2.5 2.5 0 1 1 3.1 2.4c-.7.3-.7.9-.7 1.6"/>
+      <path d="M12 16.8h.01" stroke-width="2.3"/>
+    </symbol>
+    <symbol id="i-close" viewBox="0 0 24 24">
+      <path d="m6 6 12 12M18 6 6 18"/>
+    </symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24">
+      <path d="M7 17 17 7M8 7h9v9"/>
+    </symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24">
+      <path d="m9 5 7 7-7 7"/>
+    </symbol>
+    <symbol id="i-drag" viewBox="0 0 24 24">
+      <path d="M12 3.3v17.4M3.3 12h17.4M12 3.3 9.6 5.7M12 3.3l2.4 2.4M20.7 12l-2.4-2.4M20.7 12l-2.4 2.4M12 20.7l-2.4-2.4M12 20.7l2.4-2.4M3.3 12l2.4-2.4M3.3 12l2.4 2.4"/>
+    </symbol>
+    <symbol id="i-click" viewBox="0 0 24 24">
+      <path d="M8.3 4.3v9.8l2.6-2.4 2.1 4.9 2.7-1.1-2.1-4.9 3.5-.4z"/>
+      <path d="M16.9 3.3 18 2.2M20 6l1.3-.8M18.4 10.1l1.4.4"/>
+    </symbol>
+    <symbol id="i-zoom" viewBox="0 0 24 24">
+      <circle cx="10.5" cy="10.5" r="6.8"/>
+      <path d="m15.5 15.5 5 5M8 10.5h5M10.5 8v5"/>
+    </symbol>
+    <symbol id="i-scan" viewBox="0 0 24 24">
+      <path d="M3.4 8.6V5.2a1.8 1.8 0 0 1 1.8-1.8h3.4M15.4 3.4h3.4a1.8 1.8 0 0 1 1.8 1.8v3.4M20.6 15.4v3.4a1.8 1.8 0 0 1-1.8 1.8h-3.4M8.6 20.6H5.2a1.8 1.8 0 0 1-1.8-1.8v-3.4"/>
+      <circle cx="12" cy="12" r="3.1"/>
+    </symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="4.1"/>
+      <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6"/>
+    </symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24">
+      <path d="M20.4 14.7A8.5 8.5 0 0 1 9.3 3.6a8.7 8.7 0 1 0 11.1 11.1z"/>
+    </symbol>
+    <symbol id="i-info" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9.2"/>
+      <path d="M12 10.9v5.4M12 7.7h.01" stroke-width="2.3"/>
+    </symbol>
+    <symbol id="i-apple-outline" viewBox="0 0 24 24">
+      <path d="M12.2 6.2c1.8.1 3 1.4 2.8 3.1-.2 1.7-1.6 2.7-3.2 2.5-1.6-.2-2.7-1.4-2.5-3 .2-1.7 1.5-2.7 2.9-2.6zM9.1 12.1c2.4-1 5.1.2 6.2 2.4 1 2.1.2 4.8-2 6.1-1.6.9-3 .5-4.2.1-1.2-.4-2.6-.4-3.8.1-2.6 1-5.2-1.2-5.4-4.2-.1-1.7.7-3.3 2-4.3 1.6-1.2 3.1-.7 4.5-.2z" transform="translate(3 0) scale(.72)"/>
+      <path d="M13.4 3.2c-.3 1.9-1.8 3.2-3.6 3.1"/>
+    </symbol>
+  </svg>
+
+  <div class="backdrop" aria-hidden="true">
+    <div class="backdrop__grid"></div>
+    <div class="backdrop__glow backdrop__glow--warm"></div>
+    <div class="backdrop__glow backdrop__glow--cool"></div>
+    <div class="backdrop__ring"></div>
+    <div class="backdrop__noise"></div>
+    <div class="backdrop__vignette"></div>
+  </div>
+
+  <div class="app" id="app" data-view="assembled">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand__mark" aria-hidden="true">
+          <svg class="icon"><use href="#i-sigil"></use></svg>
+        </span>
+        <span class="brand__copy">
+          <strong>STRUCTURE<span>/</span>LAB</strong>
+          <small>APPLE TEARDOWN STUDY · 016</small>
+        </span>
+      </div>
+
+      <div class="top-title">
+        <span class="top-title__eyebrow"><i></i> 交互式结构研究</span>
+        <h1>iPhone 16 Pro <span>· 精密结构实验室</span></h1>
+      </div>
+
+      <div class="top-actions">
+        <a class="spec-link" href="https://support.apple.com/zh-cn/121031" target="_blank" rel="noopener noreferrer">
+          <span>官方技术规格</span>
+          <svg class="icon"><use href="#i-arrow"></use></svg>
+        </a>
+        <button class="icon-btn icon-btn--glass" id="help-open" type="button" aria-label="打开操作指南" title="操作指南">
+          <svg class="icon"><use href="#i-help"></use></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside class="panel parts-panel" aria-label="部件清单面板">
+        <div class="panel__eyebrow">
+          <span>STRUCTURE MANIFEST</span>
+          <span class="live-chip"><i></i> LIVE</span>
+        </div>
+
+        <div class="parts-heading">
+          <div class="parts-heading__row">
+            <h2>结构清单</h2>
+            <span class="count-badge">11</span>
+          </div>
+          <p>选择部件，查看精密构造</p>
+        </div>
+
+        <section class="finish-card" aria-label="外观配色选择">
+          <div class="finish-card__top">
+            <span>外观配色</span>
+            <b id="finish-name">白色钛金属</b>
+          </div>
+          <div class="swatches" id="finish-swatches" role="radiogroup" aria-label="选择钛金属配色"></div>
+        </section>
+
+        <nav class="parts-list" id="parts-list" aria-label="iPhone 16 Pro 部件清单"></nav>
+
+        <div class="panel__footer">
+          <span class="footer-orbit" aria-hidden="true"></span>
+          <span>全部几何体由代码实时生成</span>
+          <span class="footer-code">THREE.JS</span>
+        </div>
+      </aside>
+
+      <main class="stage" id="stage" aria-label="iPhone 16 Pro 三维交互模型">
+        <canvas id="scene" aria-label="可旋转、缩放和点击拆解的 iPhone 16 Pro 三维模型"></canvas>
+
+        <div class="stage__atmosphere" aria-hidden="true">
+          <span class="stage__orbit stage__orbit--one"></span>
+          <span class="stage__orbit stage__orbit--two"></span>
+          <span class="stage__orbit stage__orbit--three"></span>
+          <span class="stage__axis stage__axis--x"></span>
+          <span class="stage__axis stage__axis--y"></span>
+          <span class="stage__scan"></span>
+          <span class="stage__watermark">PRO</span>
+        </div>
+
+        <div class="stage__corners" aria-hidden="true">
+          <i></i><i></i><i></i><i></i>
+        </div>
+
+        <div class="stage-hud stage-hud--left">
+          <span class="status-pill">
+            <i class="status-dot"></i>
+            <span id="view-state">完整装配</span>
+            <span class="hud-sep">/</span>
+            <span id="view-code">ASSEMBLED</span>
+          </span>
+          <span class="hud-note">DESIGNED BY CODE · NOT A RENDER</span>
+        </div>
+
+        <div class="stage-hud stage-hud--right" aria-hidden="true">
+          <span>X <b>071.5</b></span>
+          <span>Y <b>149.6</b></span>
+          <span>Z <b>008.25</b></span>
+          <em>MM</em>
+        </div>
+
+        <div class="view-switch" id="view-switch" role="group" aria-label="快速切换模型视角">
+          <span class="view-switch__label">VIEW</span>
+          <button type="button" class="is-active" data-view-preset="front" aria-pressed="true">正面</button>
+          <button type="button" data-view-preset="back" aria-pressed="false">背面</button>
+        </div>
+
+        <div class="mobile-parts" id="mobile-parts">
+          <div class="mobile-parts__head">
+            <span>结构清单</span>
+            <span>拖拽旋转 · 缩放视角</span>
+          </div>
+          <div class="mobile-parts__track" id="mobile-parts-track"></div>
+        </div>
+
+        <div class="callouts" id="callouts" aria-label="3D 部件标注">
+          <svg class="callout-lines" id="callout-lines" aria-hidden="true"></svg>
+        </div>
+
+        <div class="reticle" id="reticle" aria-hidden="true">
+          <i class="reticle__corner reticle__corner--tl"></i>
+          <i class="reticle__corner reticle__corner--tr"></i>
+          <i class="reticle__corner reticle__corner--bl"></i>
+          <i class="reticle__corner reticle__corner--br"></i>
+          <span class="reticle__tag" id="reticle-tag">00 / PART</span>
+          <span class="reticle__cross"></span>
+        </div>
+
+        <div class="hover-tip" id="hover-tip" aria-hidden="true">
+          <span class="hover-tip__index" id="hover-tip-index">01</span>
+          <span class="hover-tip__body">
+            <strong id="hover-tip-name">超瓷晶面板</strong>
+            <small id="hover-tip-action">点击查看部件详情</small>
+          </span>
+          <svg class="icon"><use href="#i-chevron"></use></svg>
+        </div>
+
+        <div class="selection-toast" id="selection-toast" role="status" aria-live="polite"></div>
+
+        <button class="screen-hint" id="screen-hint" type="button" aria-label="点亮屏幕并显示锁屏壁纸">
+          <span class="screen-hint__icon"><svg class="icon"><use href="#i-sun"></use></svg></span>
+          <span class="screen-hint__copy">
+            <strong>屏幕已熄灭</strong>
+            <small>轻触屏幕或点击此处唤醒锁屏</small>
+          </span>
+          <span class="screen-hint__key">L</span>
+        </button>
+
+        <div class="interaction-hints" aria-label="操作提示">
+          <span><svg class="icon"><use href="#i-drag"></use></svg>拖拽 · 旋转</span>
+          <span><svg class="icon"><use href="#i-zoom"></use></svg>滚轮 · 缩放</span>
+          <span><svg class="icon"><use href="#i-click"></use></svg>点击 · 拆解</span>
+          <span><svg class="icon"><use href="#i-sun"></use></svg>屏幕 · 亮 / 熄</span>
+        </div>
+
+        <div class="assembly-readout" aria-hidden="true">
+          <span class="assembly-readout__label">TEARDOWN</span>
+          <span class="assembly-readout__bar"><i id="assembly-fill"></i></span>
+          <span class="assembly-readout__value" id="assembly-value">000</span>
+        </div>
+
+        <div class="control-dock" role="toolbar" aria-label="模型控制">
+          <button class="dock-primary" id="explode-toggle" type="button" aria-pressed="false">
+            <span class="dock-primary__glyph"><svg class="icon"><use href="#i-layers"></use></svg></span>
+            <span class="dock-primary__copy">
+              <small id="explode-kicker">EXPLODE</small>
+              <strong id="explode-label">拆解视图</strong>
+            </span>
+            <span class="dock-primary__key">SPACE</span>
+          </button>
+          <span class="dock-divider" aria-hidden="true"></span>
+          <button class="dock-btn screen-toggle is-active" id="screen-toggle" type="button" aria-pressed="true" title="熄灭屏幕（L）">
+            <svg class="icon"><use href="#i-sun"></use></svg>
+            <span id="screen-toggle-label">熄屏</span>
+          </button>
+          <button class="dock-btn is-active" id="auto-rotate" type="button" aria-pressed="true" title="自动旋转（A）">
+            <svg class="icon"><use href="#i-rotate"></use></svg>
+            <span>自动旋转</span>
+          </button>
+          <button class="dock-btn" id="reset-view" type="button" title="重置视角（R）">
+            <svg class="icon"><use href="#i-reset"></use></svg>
+            <span>重置</span>
+          </button>
+          <button class="dock-btn dock-btn--mobile" id="mobile-info" type="button" title="查看部件详情">
+            <svg class="icon"><use href="#i-scan"></use></svg>
+            <span>详情</span>
+          </button>
+        </div>
+
+        <div class="first-visit" id="first-visit">
+          <span class="first-visit__pulse"></span>
+          <span>点击屏幕或部件，开始探索</span>
+          <button type="button" id="first-visit-close" aria-label="关闭提示">
+            <svg class="icon"><use href="#i-close"></use></svg>
+          </button>
+        </div>
+      </main>
+
+      <aside class="panel details-panel" id="details-panel" aria-label="部件详情面板">
+        <div class="detail-topbar">
+          <div class="detail-topbar__title">
+            <span class="panel__eyebrow">PART INSPECTOR</span>
+            <span class="detail-close-label" id="detail-mode-label">整机概览</span>
+          </div>
+          <button class="icon-btn icon-btn--small" id="detail-close" type="button" aria-label="收起或关闭详情">
+            <svg class="icon"><use href="#i-close"></use></svg>
+          </button>
+        </div>
+        <div class="detail-scroll" id="detail-content"></div>
+        <div class="detail-footer">
+          <span>参数参考 Apple 官方技术规格与公开资料</span>
+          <a href="https://support.apple.com/zh-cn/121031" target="_blank" rel="noopener noreferrer">查看来源 <svg class="icon"><use href="#i-arrow"></use></svg></a>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="loader" id="loader">
+    <div class="loader__halo" aria-hidden="true">
+      <span></span><span></span><span></span>
+      <i></i>
+    </div>
+    <div class="loader__brand">STRUCTURE<span>/</span>LAB</div>
+    <div class="loader__title">iPhone 16 Pro</div>
+    <div class="loader__sub">正在构建钛金属结构</div>
+    <div class="loader__track"><i id="loader-fill"></i></div>
+    <div class="loader__meta">
+      <span>PRECISION IN PROGRESS</span>
+      <span id="loader-percent">00</span>
+    </div>
+  </div>
+
+  <dialog class="help-modal" id="help-dialog" aria-labelledby="help-title">
+    <div class="help-card">
+      <div class="help-head">
+        <div>
+          <span class="panel__eyebrow">INTERACTION GUIDE</span>
+          <h2 id="help-title">探索每一层精密</h2>
+        </div>
+        <button class="icon-btn icon-btn--glass" id="help-close" type="button" aria-label="关闭操作指南">
+          <svg class="icon"><use href="#i-close"></use></svg>
+        </button>
+      </div>
+
+      <div class="help-grid">
+        <article class="help-item">
+          <span class="help-icon"><svg class="icon"><use href="#i-drag"></use></svg></span>
+          <span class="help-copy"><b>自由旋转</b><small>拖拽模型，从任意角度观察 iPhone 16 Pro 的机身与内部。</small></span>
+        </article>
+        <article class="help-item">
+          <span class="help-icon"><svg class="icon"><use href="#i-zoom"></use></svg></span>
+          <span class="help-copy"><b>缩放视角</b><small>使用滚轮或在触控板上双指滑动，拉近查看螺丝与芯片细节。</small></span>
+        </article>
+        <article class="help-item">
+          <span class="help-icon"><svg class="icon"><use href="#i-click"></use></svg></span>
+          <span class="help-copy"><b>点击拆解</b><small>点击任意部件，模型自动展开并高亮该结构，同时展示详细参数。</small></span>
+        </article>
+        <article class="help-item">
+          <span class="help-icon"><svg class="icon"><use href="#i-layers"></use></svg></span>
+          <span class="help-copy"><b>一键解构</b><small>按空格键或点击「拆解视图」，查看完整的内部层叠关系。</small></span>
+        </article>
+        <article class="help-item help-item--wide">
+          <span class="help-icon"><svg class="icon"><use href="#i-sun"></use></svg></span>
+          <span class="help-copy"><b>点亮锁屏</b><small>点击控制栏中的「亮屏 / 熄屏」，或轻触手机屏幕，即可点亮锁屏壁纸；再次操作即可熄灭。</small></span>
+        </article>
+      </div>
+
+      <div class="help-shortcuts">
+        <span><kbd>SPACE</kbd> 拆解 / 复原</span>
+        <span><kbd>L</kbd> 亮屏 / 熄屏</span>
+        <span><kbd>A</kbd> 自动旋转</span>
+        <span><kbd>R</kbd> 重置视角</span>
+        <span><kbd>ESC</kbd> 关闭面板</span>
+      </div>
+
+      <div class="help-note">
+        <svg class="icon"><use href="#i-info"></use></svg>
+        <p>本页面为基于 Three.js 的非官方概念可视化演示，所有部件由代码程序化建模。产品参数参考 <a href="https://support.apple.com/zh-cn/121031" target="_blank" rel="noopener noreferrer">Apple 官方技术规格</a>，仅供学习与展示。</p>
+      </div>
+
+      <button class="help-start" id="help-start" type="button">开始探索 <span>→</span></button>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="webgl-error" id="webgl-error" hidden>
+    <div class="webgl-error__card">
+      <span class="panel__eyebrow">WEBGL UNAVAILABLE</span>
+      <h2>无法启动 3D 引擎</h2>
+      <p>当前浏览器未启用 WebGL。请尝试更新 Chrome / Edge / Safari，或在浏览器设置中开启硬件加速后重新载入。</p>
+      <button type="button" onclick="location.reload()">重新载入</button>
+    </div>
+  </div>
+
+  <noscript>
+    <div class="noscript">此交互页面需要启用 JavaScript 才能运行。</div>
+  </noscript>
+
+  <script src="vendor/three.min.js"></script>
+  <script src="js/model.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
