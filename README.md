@@ -3,6 +3,8 @@
 一个使用 **Three.js + HTML + CSS + JavaScript** 构建的 iPhone 16 Pro 交互式 3D 拆解可视化页面。
 
 > 本页面为原理性、非官方概念演示。所有产品名称与参数仅用于学习与展示，参数以 Apple 官方页面为准。默认外观按参考真机图呈现为白色钛金属，可在页面中切换其他钛金属配色。
+>
+> **在线预览：** https://cc-tea.github.io/Cc-iPhone16Pro-3D/
 
 ![iPhone 16 Pro front](previews/desktop-hero.png)
 ![iPhone 16 Pro rear](previews/desktop-rear.png)
